@@ -1,0 +1,12 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Channy/ScrollBar.xaml" />
+        <ResourceDictionary Source="Channy/Window.xaml" />
+        <ResourceDictionary Source="Channy/ImageButton.xaml" />
+        <ResourceDictionary Source="Channy/ProgressBar.xaml" />
+        <ResourceDictionary Source="Channy/ToolTip.xaml" />
+        <ResourceDictionary Source="Channy/Button.xaml" />
+        <ResourceDictionary Source="Channy/ToggleButton.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>

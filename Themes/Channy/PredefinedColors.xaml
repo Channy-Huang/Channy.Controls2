@@ -1,0 +1,222 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:svg="clr-namespace:Svg2Xaml;assembly=Svg2Xaml">
+
+    <Color x:Key="ButtonInfo">#17A2B8</Color>
+    <Color x:Key="ButtonSuccess">#28A745</Color>
+    <Color x:Key="ButtonWarning">#FFC107</Color>
+    <Color x:Key="ButtonDanger">#DC3545</Color>
+    <Color x:Key="ButtonPrimary">#007BFF</Color>
+    <Color x:Key="ButtonSecondary">#868E96</Color>
+    <Color x:Key="ButtonDisabled">#E2E6EA</Color>
+
+    <Color x:Key="BorderInfo">#8BD0DB</Color>
+    <Color x:Key="BorderSuccess">#28A745</Color>
+    <Color x:Key="BorderWarning">#FFE083</Color>
+    <Color x:Key="BorderDanger">#ED9AA2</Color>
+    <Color x:Key="BorderPrimary">#7FBDFF</Color>
+    <Color x:Key="BorderSecondary">#C2C6CA</Color>
+
+    <Style x:Key="ChannyRoundedButtonStyle" TargetType="Button">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Padding" Value="5"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="OuterBorder" CornerRadius="5"
+                            TextBlock.Foreground="{TemplateBinding Foreground}" Background="{TemplateBinding Background}">
+                        <Border x:Name="InnerBorder" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter x:Name="Content" HorizontalAlignment="Center" VerticalAlignment="Center" RecognizesAccessKey="True" />
+                        </Border>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" TargetName="InnerBorder" Value="#20000000" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <!--<Setter Property="Margin" TargetName="Content" Value="0,0,-1,-1" />-->
+                            <Setter Property="Background" TargetName="InnerBorder" Value="#30000000" />
+                        </Trigger>
+                        <Trigger Property="IsDefault" Value="True">
+                            <Setter Property="Effect" TargetName="OuterBorder">
+                                <Setter.Value>
+                                    <DropShadowEffect Opacity="1" Color="White" BlurRadius="5" ShadowDepth="0"/>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="BorderThickness" TargetName="OuterBorder" Value="{Binding BorderThickness, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}"/>
+                            <Setter Property="BorderBrush" TargetName="OuterBorder" Value="{Binding BorderBrush, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}"/>
+                        </Trigger>
+                        <Trigger Property="IsFocused" Value="True">
+                            <Setter Property="BorderThickness" TargetName="OuterBorder" Value="{Binding BorderThickness, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}"/>
+                            <Setter Property="BorderBrush" TargetName="OuterBorder" Value="{Binding BorderBrush, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Background" TargetName="InnerBorder">
+                                <Setter.Value>
+                                    <SolidColorBrush Color="{Binding Source={StaticResource ButtonDisabled}}"/>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="TextBlock.Foreground" Value="DimGray"/>
+                            <Setter Property="BorderBrush" TargetName="OuterBorder" Value="Transparent"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ChannyButtonStyle" TargetType="Button">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Padding" Value="5"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="OuterBorder"
+                            TextBlock.Foreground="{TemplateBinding Foreground}" Background="{TemplateBinding Background}">
+                        <Border x:Name="InnerBorder" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter x:Name="Content" HorizontalAlignment="Center" VerticalAlignment="Center" RecognizesAccessKey="True" />
+                        </Border>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" TargetName="InnerBorder" Value="#20000000" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <!--<Setter Property="Margin" TargetName="Content" Value="0,0,-1,-1" />-->
+                            <Setter Property="Background" TargetName="InnerBorder" Value="#30000000" />
+                        </Trigger>
+                        <Trigger Property="IsDefault" Value="True">
+                            <Setter Property="Effect" TargetName="OuterBorder">
+                                <Setter.Value>
+                                    <DropShadowEffect Opacity="1" Color="White" BlurRadius="5" ShadowDepth="0"/>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="BorderThickness" TargetName="OuterBorder" Value="{Binding BorderThickness, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}"/>
+                            <Setter Property="BorderBrush" TargetName="OuterBorder" Value="{Binding BorderBrush, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}"/>
+                        </Trigger>
+                        <Trigger Property="IsFocused" Value="True">
+                            <Setter Property="BorderThickness" TargetName="OuterBorder" Value="{Binding BorderThickness, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}"/>
+                            <Setter Property="BorderBrush" TargetName="OuterBorder" Value="{Binding BorderBrush, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Background" TargetName="InnerBorder">
+                                <Setter.Value>
+                                    <SolidColorBrush Color="{Binding Source={StaticResource ButtonDisabled}}"/>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="TextBlock.Foreground" Value="DimGray"/>
+                            <Setter Property="BorderBrush" TargetName="OuterBorder" Value="Transparent"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ChannyPrimaryButton" TargetType="Button" BasedOn="{StaticResource ChannyButtonStyle}">
+        <Setter Property="Background">
+            <Setter.Value>
+                <SolidColorBrush Color="{Binding Source={StaticResource ButtonPrimary}}"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="WhiteSmoke" />
+    </Style>
+
+    <Style x:Key="ChannySecondaryButton" TargetType="Button" BasedOn="{StaticResource ChannyButtonStyle}">
+        <Setter Property="Background">
+            <Setter.Value>
+                <SolidColorBrush Color="{Binding Source={StaticResource ButtonSecondary}}"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="WhiteSmoke" />
+    </Style>
+
+    <Style x:Key="ChannyInfoButton" TargetType="Button" BasedOn="{StaticResource ChannyButtonStyle}">
+        <Setter Property="Background">
+            <Setter.Value>
+                <SolidColorBrush Color="{Binding Source={StaticResource ButtonInfo}}"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="BorderBrush">
+            <Setter.Value>
+                <SolidColorBrush Color="{Binding Source={StaticResource BorderInfo}}"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Foreground" Value="WhiteSmoke" />
+    </Style>
+
+    <Style x:Key="ChannySuccessButton" TargetType="Button" BasedOn="{StaticResource ChannyButtonStyle}">
+        <Setter Property="Background">
+            <Setter.Value>
+                <SolidColorBrush Color="{Binding Source={StaticResource ButtonSuccess}}"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="WhiteSmoke" />
+    </Style>
+
+    <Style x:Key="ChannyWarningButton" TargetType="Button" BasedOn="{StaticResource ChannyButtonStyle}">
+        <Setter Property="Background">
+            <Setter.Value>
+                <SolidColorBrush Color="{Binding Source={StaticResource ButtonWarning}}"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="WhiteSmoke" />
+    </Style>
+    <Style x:Key="ChannyDangerButton" TargetType="Button" BasedOn="{StaticResource ChannyButtonStyle}">
+        <Setter Property="Background">
+            <Setter.Value>
+                <SolidColorBrush Color="{Binding Source={StaticResource ButtonDanger}}"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="WhiteSmoke" />
+    </Style>
+
+    <Style x:Key="ChannyCloseButton" TargetType="Button">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Padding" Value="5"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="OuterBorder"
+                            TextBlock.Foreground="{TemplateBinding Foreground}" Background="Transparent">
+                        <Border x:Name="InnerBorder" Padding="{TemplateBinding Padding}">
+                            <Image Source="{svg:SvgImage /Channy.Controls2;component/Images/close.svg}" Height="10" Width="10"/>
+                        </Border>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" TargetName="InnerBorder">
+                                <Setter.Value>
+                                    <SolidColorBrush Color="{Binding Source={StaticResource ButtonDanger}}"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Background" TargetName="InnerBorder" Value="#30000000" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Background" TargetName="InnerBorder">
+                                <Setter.Value>
+                                    <SolidColorBrush Color="{Binding Source={StaticResource ButtonDisabled}}"/>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="TextBlock.Foreground" Value="DimGray"/>
+                            <Setter Property="BorderBrush" TargetName="OuterBorder" Value="Transparent"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

@@ -1,0 +1,46 @@
+﻿<Channy:Window x:Class="Channy.Controls2.Controls.MessageBox"
+               xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+               xmlns:Channy="clr-namespace:Channy.Controls2.Controls"
+               xmlns:lex="http://wpflocalizeextension.codeplex.com"
+               lex:ResxLocalizationProvider.DefaultAssembly="Channy.Controls2"
+               lex:ResxLocalizationProvider.DefaultDictionary="channy.controls"
+               Title="" Height="240" Width="360" ControlBoxStyle="Close" ShowInTaskbar="True" 
+               ControlGridBackColor="#c0ffffff" Background="#AA333333" ResizeMode="NoResize" FontSize="15">
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="Window.Loaded">
+            <BeginStoryboard>
+                <Storyboard>
+                    <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0.0" To="1.0" Duration="0:0:0.2"/>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+    </Window.Triggers>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Name="BottomBanner" Height="auto"/>
+        </Grid.RowDefinitions>
+        <Image Name="Picture" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="2" Opacity="0.22" HorizontalAlignment="Left" Width="192" Height="192"/>
+        <ScrollViewer Grid.Column="1" Grid.ColumnSpan="3" VerticalContentAlignment="Center" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="10,5" Focusable="False">
+            <TextBlock Name="Message" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="SemiBold" >
+                <!--<TextBlock.Effect>
+                    <DropShadowEffect ShadowDepth="0" BlurRadius="8" Color="DimGray"></DropShadowEffect>
+                </TextBlock.Effect>-->
+            </TextBlock>
+        </ScrollViewer>
+        <Grid Grid.Row="2" Margin="0,0,0,10" VerticalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="85"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="85"/>
+                <ColumnDefinition Width="10"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="OK" IsDefault="True" Grid.Column="4" Click="OK_Click" Content="{lex:Loc STRING_BUTTON_CAPTION_OK}"/>
+            <Button x:Name="Yes" IsDefault="True" Grid.Column="2" Click="OK_Click" Content="{lex:Loc STRING_BUTTON_CAPTION_YES}"/>
+            <Button x:Name="No" IsCancel="True" Grid.Column="4" Content="{lex:Loc STRING_BUTTON_CAPTION_NO}"/>
+        </Grid>
+    </Grid>
+</Channy:Window>
