@@ -5,8 +5,8 @@
                xmlns:lex="http://wpflocalizeextension.codeplex.com"
                lex:ResxLocalizationProvider.DefaultAssembly="Channy.Controls2"
                lex:ResxLocalizationProvider.DefaultDictionary="channy.controls"
-               Title="" Height="240" Width="360" ControlBoxStyle="Close" ShowInTaskbar="True" 
-               ControlGridBackColor="#c0ffffff" Background="#AA333333" ResizeMode="NoResize" FontSize="15">
+               Title="" Height="240" Width="360" ControlBoxStyle="Close" ShowInTaskbar="True" FontSize="15"
+               Background="#AA333333" ResizeMode="NoResize" BottomBannerHeight="{Binding ElementName=BottomBanner, Path=ActualHeight}">
     <Window.Triggers>
         <EventTrigger RoutedEvent="Window.Loaded">
             <BeginStoryboard>
@@ -19,28 +19,103 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
-            <RowDefinition Name="BottomBanner" Height="auto"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <Image Name="Picture" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="2" Opacity="0.22" HorizontalAlignment="Left" Width="192" Height="192"/>
-        <ScrollViewer Grid.Column="1" Grid.ColumnSpan="3" VerticalContentAlignment="Center" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="10,5" Focusable="False">
+        <Image Name="Picture" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="2" Opacity="0.22" HorizontalAlignment="Left" Width="192" Height="192">
+            <Image.Style>
+                <Style TargetType="Image">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Channy:MessageBox}, Path=Type}" Value="Info">
+                            <Setter Property="Source" Value="/Channy.Controls2;component/Images/info.png" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Channy:MessageBox}, Path=Type}" Value="Error">
+                            <Setter Property="Source" Value="/Channy.Controls2;component/Images/error.png" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Channy:MessageBox}, Path=Type}" Value="Success">
+                            <Setter Property="Source" Value="/Channy.Controls2;component/Images/success.png" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Channy:MessageBox}, Path=Type}" Value="Question">
+                            <Setter Property="Source" Value="/Channy.Controls2;component/Images/question.png" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Image.Style>
+        </Image>
+        <ScrollViewer VerticalContentAlignment="Center" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="10,5" Focusable="False">
             <TextBlock Name="Message" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="SemiBold" >
                 <!--<TextBlock.Effect>
                     <DropShadowEffect ShadowDepth="0" BlurRadius="8" Color="DimGray"></DropShadowEffect>
                 </TextBlock.Effect>-->
             </TextBlock>
         </ScrollViewer>
-        <Grid Grid.Row="2" Margin="0,0,0,10" VerticalAlignment="Center">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="10"/>
-                <ColumnDefinition/>
-                <ColumnDefinition Width="85"/>
-                <ColumnDefinition Width="5"/>
-                <ColumnDefinition Width="85"/>
-                <ColumnDefinition Width="10"/>
-            </Grid.ColumnDefinitions>
-            <Button x:Name="OK" IsDefault="True" Grid.Column="4" Click="OK_Click" Content="{lex:Loc STRING_BUTTON_CAPTION_OK}"/>
-            <Button x:Name="Yes" IsDefault="True" Grid.Column="2" Click="OK_Click" Content="{lex:Loc STRING_BUTTON_CAPTION_YES}"/>
-            <Button x:Name="No" IsCancel="True" Grid.Column="4" Content="{lex:Loc STRING_BUTTON_CAPTION_NO}"/>
+        <Grid Grid.Row="1" VerticalAlignment="Center" Name="BottomBanner" >
+            <Grid Margin="5,6,5,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="85"/>
+                    <ColumnDefinition Width="5"/>
+                    <ColumnDefinition Width="85"/>
+                    <ColumnDefinition Width="5"/>
+                </Grid.ColumnDefinitions>
+                <Button Name="OK" IsDefault="True" Grid.Column="4" Click="OK_Click" Content="{lex:Loc STRING_BUTTON_CAPTION_OK}">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource ChannyInfoButton}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Channy:MessageBox}, Path=Type}" Value="Info">
+                                    <Setter Property="IsDefault" Value="True" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Channy:MessageBox}, Path=Type}" Value="Error">
+                                    <Setter Property="IsDefault" Value="True" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Channy:MessageBox}, Path=Type}" Value="Success">
+                                    <Setter Property="IsDefault" Value="True" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Channy:MessageBox}, Path=Type}" Value="Question">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                <Button Name="Yes" Grid.Column="2" Click="OK_Click" Content="{lex:Loc STRING_BUTTON_CAPTION_YES}">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource ChannyInfoButton}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Channy:MessageBox}, Path=Type}" Value="Info">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Channy:MessageBox}, Path=Type}" Value="Error">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Channy:MessageBox}, Path=Type}" Value="Success">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Channy:MessageBox}, Path=Type}" Value="Question">
+                                    <Setter Property="IsDefault" Value="True" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                <Button Name="No" Grid.Column="4" IsCancel="True" Content="{lex:Loc STRING_BUTTON_CAPTION_NO}">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource ChannySecondaryButton}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Channy:MessageBox}, Path=Type}" Value="Info">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Channy:MessageBox}, Path=Type}" Value="Error">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Channy:MessageBox}, Path=Type}" Value="Success">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </Grid>
         </Grid>
     </Grid>
 </Channy:Window>

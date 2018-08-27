@@ -20,11 +20,11 @@
     <Style x:Key="ChannyRoundedButtonStyle" TargetType="Button">
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="OverridesDefaultStyle" Value="True" />
-        <Setter Property="Padding" Value="5"/>
+        <Setter Property="Padding" Value="5,3"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Border x:Name="OuterBorder" CornerRadius="5"
+                    <Border x:Name="OuterBorder" CornerRadius="5" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}"
                             TextBlock.Foreground="{TemplateBinding Foreground}" Background="{TemplateBinding Background}">
                         <Border x:Name="InnerBorder" Padding="{TemplateBinding Padding}">
                             <ContentPresenter x:Name="Content" HorizontalAlignment="Center" VerticalAlignment="Center" RecognizesAccessKey="True" />
@@ -35,7 +35,7 @@
                             <Setter Property="Background" TargetName="InnerBorder" Value="#20000000" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
-                            <!--<Setter Property="Margin" TargetName="Content" Value="0,0,-1,-1" />-->
+                            <Setter Property="Margin" TargetName="Content" Value="1,1,-1,-1" />
                             <Setter Property="Background" TargetName="InnerBorder" Value="#30000000" />
                         </Trigger>
                         <Trigger Property="IsDefault" Value="True">
@@ -44,12 +44,10 @@
                                     <DropShadowEffect Opacity="1" Color="White" BlurRadius="5" ShadowDepth="0"/>
                                 </Setter.Value>
                             </Setter>
-                            <Setter Property="BorderThickness" TargetName="OuterBorder" Value="{Binding BorderThickness, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}"/>
-                            <Setter Property="BorderBrush" TargetName="OuterBorder" Value="{Binding BorderBrush, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}"/>
+                            <Setter Property="BorderBrush" TargetName="OuterBorder" Value="LightGray"/>
                         </Trigger>
                         <Trigger Property="IsFocused" Value="True">
-                            <Setter Property="BorderThickness" TargetName="OuterBorder" Value="{Binding BorderThickness, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}"/>
-                            <Setter Property="BorderBrush" TargetName="OuterBorder" Value="{Binding BorderBrush, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}"/>
+                            <Setter Property="BorderBrush" TargetName="OuterBorder" Value="White"/>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Background" TargetName="InnerBorder">
@@ -69,11 +67,11 @@
     <Style x:Key="ChannyButtonStyle" TargetType="Button">
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="OverridesDefaultStyle" Value="True" />
-        <Setter Property="Padding" Value="5"/>
+        <Setter Property="Padding" Value="5,3"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Border x:Name="OuterBorder"
+                    <Border x:Name="OuterBorder" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}"
                             TextBlock.Foreground="{TemplateBinding Foreground}" Background="{TemplateBinding Background}">
                         <Border x:Name="InnerBorder" Padding="{TemplateBinding Padding}">
                             <ContentPresenter x:Name="Content" HorizontalAlignment="Center" VerticalAlignment="Center" RecognizesAccessKey="True" />
@@ -84,7 +82,7 @@
                             <Setter Property="Background" TargetName="InnerBorder" Value="#20000000" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
-                            <!--<Setter Property="Margin" TargetName="Content" Value="0,0,-1,-1" />-->
+                            <Setter Property="Margin" TargetName="Content" Value="1,1,-1,-1" />
                             <Setter Property="Background" TargetName="InnerBorder" Value="#30000000" />
                         </Trigger>
                         <Trigger Property="IsDefault" Value="True">
@@ -93,12 +91,10 @@
                                     <DropShadowEffect Opacity="1" Color="White" BlurRadius="5" ShadowDepth="0"/>
                                 </Setter.Value>
                             </Setter>
-                            <Setter Property="BorderThickness" TargetName="OuterBorder" Value="{Binding BorderThickness, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}"/>
-                            <Setter Property="BorderBrush" TargetName="OuterBorder" Value="{Binding BorderBrush, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}"/>
+                            <Setter Property="BorderBrush" TargetName="OuterBorder" Value="LightGray"/>
                         </Trigger>
                         <Trigger Property="IsFocused" Value="True">
-                            <Setter Property="BorderThickness" TargetName="OuterBorder" Value="{Binding BorderThickness, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}"/>
-                            <Setter Property="BorderBrush" TargetName="OuterBorder" Value="{Binding BorderBrush, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}"/>
+                            <Setter Property="BorderBrush" TargetName="OuterBorder" Value="White"/>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Background" TargetName="InnerBorder">
@@ -123,6 +119,8 @@
         </Setter>
         <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="Foreground" Value="WhiteSmoke" />
+        <Setter Property="BorderBrush" Value="Gray" />
+        <Setter Property="BorderThickness" Value="1" />
     </Style>
 
     <Style x:Key="ChannySecondaryButton" TargetType="Button" BasedOn="{StaticResource ChannyButtonStyle}">
@@ -133,6 +131,8 @@
         </Setter>
         <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="Foreground" Value="WhiteSmoke" />
+        <Setter Property="BorderBrush" Value="Gray" />
+        <Setter Property="BorderThickness" Value="1" />
     </Style>
 
     <Style x:Key="ChannyInfoButton" TargetType="Button" BasedOn="{StaticResource ChannyButtonStyle}">
@@ -149,6 +149,8 @@
         </Setter>
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Foreground" Value="WhiteSmoke" />
+        <Setter Property="BorderBrush" Value="Gray" />
+        <Setter Property="BorderThickness" Value="1" />
     </Style>
 
     <Style x:Key="ChannySuccessButton" TargetType="Button" BasedOn="{StaticResource ChannyButtonStyle}">
@@ -159,6 +161,8 @@
         </Setter>
         <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="Foreground" Value="WhiteSmoke" />
+        <Setter Property="BorderBrush" Value="Gray" />
+        <Setter Property="BorderThickness" Value="1" />
     </Style>
 
     <Style x:Key="ChannyWarningButton" TargetType="Button" BasedOn="{StaticResource ChannyButtonStyle}">
@@ -169,7 +173,10 @@
         </Setter>
         <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="Foreground" Value="WhiteSmoke" />
+        <Setter Property="BorderBrush" Value="Gray" />
+        <Setter Property="BorderThickness" Value="1" />
     </Style>
+    
     <Style x:Key="ChannyDangerButton" TargetType="Button" BasedOn="{StaticResource ChannyButtonStyle}">
         <Setter Property="Background">
             <Setter.Value>
@@ -178,8 +185,50 @@
         </Setter>
         <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="Foreground" Value="WhiteSmoke" />
+        <Setter Property="BorderBrush" Value="Gray" />
+        <Setter Property="BorderThickness" Value="1" />
     </Style>
 
+    <Style x:Key="ChannyWindowControlBoxButton" TargetType="Button">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Padding" Value="5"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="OuterBorder"
+                            TextBlock.Foreground="{TemplateBinding Foreground}" Background="Transparent">
+                        <Border x:Name="InnerBorder" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter Opacity="0.8" x:Name="Content" HorizontalAlignment="Center" VerticalAlignment="Center" RecognizesAccessKey="True" Margin="2">
+                                <ContentPresenter.Effect>
+                                    <DropShadowEffect BlurRadius="5" ShadowDepth="0" Color="DimGray" Direction="90" />
+                                </ContentPresenter.Effect>
+                            </ContentPresenter>
+                        </Border>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Opacity" TargetName="Content" Value="1" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Opacity" TargetName="Content" Value="1" />
+                            <Setter Property="Margin" TargetName="Content" Value="3,3,1,1" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Background" TargetName="InnerBorder">
+                                <Setter.Value>
+                                    <SolidColorBrush Color="{Binding Source={StaticResource ButtonDisabled}}"/>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="TextBlock.Foreground" Value="DimGray"/>
+                            <Setter Property="BorderBrush" TargetName="OuterBorder" Value="Transparent"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
     <Style x:Key="ChannyCloseButton" TargetType="Button">
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="OverridesDefaultStyle" Value="True" />
@@ -190,7 +239,11 @@
                     <Border x:Name="OuterBorder"
                             TextBlock.Foreground="{TemplateBinding Foreground}" Background="Transparent">
                         <Border x:Name="InnerBorder" Padding="{TemplateBinding Padding}">
-                            <Image Source="{svg:SvgImage /Channy.Controls2;component/Images/close.svg}" Height="10" Width="10"/>
+                            <Image x:Name="Image" Source="{svg:SvgImage /Channy.Controls2;component/Images/close.svg}" Height="10" Width="10" Margin="2">
+                                <Image.Effect>
+                                    <DropShadowEffect BlurRadius="5" ShadowDepth="0" Color="DimGray" Direction="90" />
+                                </Image.Effect>
+                            </Image>
                         </Border>
                     </Border>
                     <ControlTemplate.Triggers>
@@ -202,7 +255,7 @@
                             </Setter>
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
-                            <Setter Property="Background" TargetName="InnerBorder" Value="#30000000" />
+                            <Setter Property="Margin" TargetName="Image" Value="3,3,1,1" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Background" TargetName="InnerBorder">

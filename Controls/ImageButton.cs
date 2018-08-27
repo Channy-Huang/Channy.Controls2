@@ -8,55 +8,34 @@ using System.Windows.Media;
 
 namespace Channy.Controls2.Controls {
     public class ImageButton : System.Windows.Controls.Button {
-        //public static readonly DependencyProperty ImageProperty = DependencyProperty.Register("Image", typeof(ImageSource), typeof(ImageButton), new FrameworkPropertyMetadata(null, new PropertyChangedCallback(OnImageChanged)));
-        //public static readonly DependencyProperty MouseOverImageProperty = DependencyProperty.Register("MouseOverImage", typeof(ImageSource), typeof(ImageButton));
-        //public static readonly DependencyProperty ClickImageProperty = DependencyProperty.Register("ClickImage", typeof(ImageSource), typeof(ImageButton));
+        public ImageButton() {
+            Resources.MergedDictionaries.Add(new ResourceDictionary() { Source = Common.GetResourceUri("Channy/ImageButton") });
+            Template = (ControlTemplate)Resources["ImageButtonTemplate"];
+        }
+
+        public static readonly DependencyProperty ImageProperty = DependencyProperty.Register("Image", typeof(ImageSource), typeof(ImageButton), new FrameworkPropertyMetadata(null));
+        public static readonly DependencyProperty MouseOverImageProperty = DependencyProperty.Register("MouseOverImage", typeof(ImageSource), typeof(ImageButton), new FrameworkPropertyMetadata(null));
+        public static readonly DependencyProperty ClickImageProperty = DependencyProperty.Register("ClickImage", typeof(ImageSource), typeof(ImageButton), new FrameworkPropertyMetadata(null));
+        public static readonly DependencyProperty DisabledImageProperty = DependencyProperty.Register("DisabledImage", typeof(ImageSource), typeof(ImageButton), new FrameworkPropertyMetadata(null));
 
         public ImageSource Image {
-            get {
-                //return (ImageSource)GetValue(ImageProperty);
-                return image.Source;
-            }
-            set {
-                //SetValue(ImageProperty, value);
-                image.Source = value;
-            }
+            get { return (ImageSource)GetValue(ImageProperty); }
+            set { SetValue(ImageProperty, value); }
         }
 
         public ImageSource MouseOverImage {
-            get {
-                return mouseHoverImage.Source;
-                //return (ImageSource)GetValue(MouseOverImageProperty);
-            }
-            set {
-                //SetValue(MouseOverImageProperty, value);
-                mouseHoverImage.Source = value;
-            }
+            get { return (ImageSource)GetValue(MouseOverImageProperty); }
+            set { SetValue(MouseOverImageProperty, value); }
         }
 
         public ImageSource ClickImage {
-            get {
-                return clickImage.Source;
-                //return (ImageSource)GetValue(ClickImageProperty);
-            }
-            set {
-                //SetValue(ClickImageProperty, value);
-                clickImage.Source = value;
-            }
+            get { return (ImageSource)GetValue(ClickImageProperty); }
+            set { SetValue(ClickImageProperty, value); }
         }
 
         public ImageSource DisabledImage {
-            get {
-                return disabledImage.Source;
-            }
-            set {
-                disabledImage.Source = value;
-            }
-        }
-
-        public ImageButton() {
-            Resources.MergedDictionaries.Add(new ResourceDictionary() { Source = Common.GetResourceUri("Channy/ImageButton") });
-            InitializeStyle();
+            get { return (ImageSource)GetValue(DisabledImageProperty); }
+            set { SetValue(DisabledImageProperty, value); }
         }
 
         private Image image;
@@ -86,11 +65,6 @@ namespace Channy.Controls2.Controls {
             }
 
             base.OnApplyTemplate();
-        }
-
-        private void InitializeStyle() {
-            Style = (Style)Resources["ImageButtonStyle"];
-            ApplyTemplate();
         }
     }
 }

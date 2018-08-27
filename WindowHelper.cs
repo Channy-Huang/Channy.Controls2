@@ -37,26 +37,26 @@ namespace Channy.Controls2 {
             w.Activate();
         }
 
-        public static bool IsCurrentOSContains(string name) {
-            var reg = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
-            string productName = (string)reg.GetValue("ProductName");
+        //public static bool IsCurrentOSContains(string name) {
+        //    var reg = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
+        //    string productName = (string)reg.GetValue("ProductName");
 
-            return productName.Contains(name);
-        }
+        //    return productName.Contains(name);
+        //}
 
-        public static bool IsWindows8() {
-            return IsCurrentOSContains("Windows 8.0");
-        }
+        //public static bool IsWindows8() {
+        //    return IsCurrentOSContains("Windows 8.0");
+        //}
 
-        /// Check if it's Windows 8.1
-        public static bool IsWindows8Dot1() {
-            return IsCurrentOSContains("Windows 8.1");
-        }
+        ///// Check if it's Windows 8.1
+        //public static bool IsWindows8Dot1() {
+        //    return IsCurrentOSContains("Windows 8.1");
+        //}
 
-        /// Check if it's Windows 10
-        public static bool IsWindows10() {
-            return IsCurrentOSContains("Windows 10");
-        }
+        ///// Check if it's Windows 10
+        //public static bool IsWindows10() {
+        //    return IsCurrentOSContains("Windows 10");
+        //}
 
         public static T FindVisualChild<T>(DependencyObject parent, string childName = "")
             where T : DependencyObject {

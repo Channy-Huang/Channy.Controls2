@@ -14,6 +14,7 @@ namespace Channy.Controls2.Controls {
             Resources.MergedDictionaries.Add(new ResourceDictionary() { Source = Common.GetResourceUri("Channy/ToggleButton") });
             Background = new SolidColorBrush(Color.FromRgb(82, 212, 104));
             BorderBrush = new SolidColorBrush(Color.FromRgb(65, 201, 85));
+            FocusVisualStyle = null;
             Template = Resources["AnimatedToggleButton"] as ControlTemplate;
         }
     }

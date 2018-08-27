@@ -10,24 +10,23 @@ namespace Channy.Controls2.Controls {
     public partial class MessageBox : Window {
         public MessageBox() {
             InitializeComponent();
-            Loaded += MessageBox_Loaded;
         }
 
-        private void MessageBox_Loaded(object sender, RoutedEventArgs e) {
-            BottomBannerHeight = BottomBanner.ActualHeight + 10;
+        public static readonly DependencyProperty MessageBoxTypeProperty = DependencyProperty.Register("Type", typeof(MessageBoxType), typeof(MessageBox), new FrameworkPropertyMetadata(MessageBoxType.Info));
+        public MessageBoxType Type {
+            get { return (MessageBoxType)GetValue(MessageBoxTypeProperty); }
+            set { SetValue(MessageBoxTypeProperty, value); }
         }
 
-        public enum MessageBoxStyle { Simple, OK, YesNo }
+        public enum MessageBoxStyle { None, OK, YesNo }
 
         public enum MessageBoxType { None, Info, Error, Question, Success }
 
-        private bool isDialog = false;
+        private bool isModal = false;
 
         private void SetMessageBoxStyle(MessageBoxStyle style) {
-            if (style == MessageBoxStyle.Simple) {
-                BottomBannerHeight = 15;
-                GridLengthConverter converter = new GridLengthConverter();
-                BottomBanner.Height = (GridLength)converter.ConvertFromString("15");
+            if (style == MessageBoxStyle.None) {
+                BottomBanner.Height = 15;
                 OK.Visibility = Visibility.Hidden;
                 Yes.Visibility = Visibility.Hidden;
                 No.Visibility = Visibility.Hidden;
@@ -66,13 +65,13 @@ namespace Channy.Controls2.Controls {
             return ShowDialog(parent, message, title, MessageBoxType.None);
         }
 
-        public static bool? ShowDialog(System.Windows.Window parent, string message, string title, MessageBoxType type) {
-            return ShowDialog(parent, message, title, null, MessageBoxStyle.OK, type);
-        }
+        //public static bool? ShowDialog(System.Windows.Window parent, string message, string title, MessageBoxType type) {
+        //    return ShowDialog(parent, message, title, null, MessageBoxStyle.OK, type);
+        //}
 
         public static bool? ShowDialog(System.Windows.Window parent, string message, string title, ImageSource icon, MessageBoxStyle style, MessageBoxType type, Style buttonStyle = null) {
             MessageBox messageBox = new MessageBox() {
-                isDialog = true,
+                isModal = true,
                 Owner = parent
             };
             messageBox.Message.Text = message;
@@ -84,7 +83,7 @@ namespace Channy.Controls2.Controls {
                 messageBox.Background = parent.Background;
                 messageBox.FontSize = parent.FontSize;
                 if (parent is Window window) {
-                    messageBox.BaseColor = window.BaseColor;
+                    messageBox.BaseBackground = window.BaseBackground;
                 }
             } else {
                 messageBox.WindowStartupLocation = WindowStartupLocation.CenterScreen;
@@ -95,6 +94,30 @@ namespace Channy.Controls2.Controls {
                 messageBox.Yes.Style = buttonStyle;
                 messageBox.No.Style = buttonStyle;
             }
+            return messageBox.ShowDialog();
+        }
+
+        public static bool? ShowDialog(System.Windows.Window parent, string message, string title, MessageBoxType type) {
+            MessageBox messageBox = new MessageBox() {
+                isModal = true,
+                Owner = parent,
+                Type = type,
+                Title = title
+            };
+            messageBox.Message.Text = message;
+            if (parent != null) {
+                //messageBox.Icon = parent.Icon;
+                messageBox.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                messageBox.Background = parent.Background;
+                messageBox.FontSize = parent.FontSize;
+                if (parent is Window window) {
+                    messageBox.BaseBackground = window.BaseBackground;
+                    messageBox.EnableGlassEffect = window.EnableGlassEffect;
+                }
+            } else {
+                messageBox.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            }
+
             return messageBox.ShowDialog();
         }
         #endregion
@@ -121,7 +144,7 @@ namespace Channy.Controls2.Controls {
                 messageBox.FontSize = parent.FontSize;
                 messageBox.Background = parent.Background;
                 if (parent is Window window) {
-                    messageBox.BaseColor = window.BaseColor;
+                    messageBox.BaseBackground = window.BaseBackground;
                 }
             } else {
                 messageBox.WindowStartupLocation = WindowStartupLocation.CenterScreen;
@@ -151,7 +174,7 @@ namespace Channy.Controls2.Controls {
                 messageBox.FontSize = parent.FontSize;
                 messageBox.Background = parent.Background;
                 if (parent is Window window) {
-                    messageBox.BaseColor = window.BaseColor;
+                    messageBox.BaseBackground = window.BaseBackground;
                 }
             }
             messageBox.SetMessageBoxType(type);
@@ -163,13 +186,13 @@ namespace Channy.Controls2.Controls {
             }
             messageBox.Show();
         }
+        #endregion
 
         private void OK_Click(object sender, RoutedEventArgs e) {
-            if (isDialog) {
+            if (isModal) {
                 DialogResult = true;
             }
             Close();
         }
-        #endregion
     }
 }

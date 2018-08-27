@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
@@ -14,115 +16,105 @@ namespace Channy.Controls2.Controls {
         }
 
         public Window() {
+            Resources.MergedDictionaries.Add(new ResourceDictionary() { Source = Common.GetResourceUri("Channy/PredefinedColors") });
             Resources.MergedDictionaries.Add(new ResourceDictionary() { Source = Common.GetResourceUri("Channy/Window") });
             Resources.MergedDictionaries.Add(new ResourceDictionary() { Source = Common.GetResourceUri("Channy/ScrollBar") });
+
             Template = (ControlTemplate)Resources["WindowExTemplate"];
+            base.WindowStyle = WindowStyle.None;
+            base.AllowsTransparency = true;
+            Background = Brushes.Transparent;
             RegisterEvents();
-            base.WindowStyle = WindowStyle;
-            base.AllowsTransparency = AllowsTransparency;
         }
 
-        #region Attributes
-        public bool Draggable { get; set; } = true;
-
-        private new WindowStyle WindowStyle = WindowStyle.None;
-        private new bool AllowsTransparency = true;
-
-        public int Radius {
-            get { return radius; }
-        }
-
+        #region Dependency properties
+        public static readonly DependencyProperty ControlBoxStyleProperty = DependencyProperty.Register("ControlBoxStyle", typeof(ControlBoxStyles), typeof(Window), new FrameworkPropertyMetadata(ControlBoxStyles.MinMaxClose));
         public ControlBoxStyles ControlBoxStyle {
-            get {
-                return controlBoxStyle;
-            }
-            set {
-                controlBoxStyle = value;
-                if (isInitializationComplete) {
-                    SetControlBoxStyle(ControlBoxStyle);
-                }
-            }
+            get { return (ControlBoxStyles)GetValue(ControlBoxStyleProperty); }
+            set { SetValue(ControlBoxStyleProperty, value); }
         }
 
-        public Color ControlGridBackColor {
-            get { return controlGridBackColor; }
-            set {
-                controlGridBackColor = value;
-                if (isInitializationComplete) {
-                    SetControlGridBackColor(value);
-                }
-            }
+        public static readonly new DependencyProperty AllowsTransparencyProperty = DependencyProperty.Register("AllowsTransparency", typeof(bool), typeof(Window), new FrameworkPropertyMetadata(false));
+        public new bool AllowsTransparency {
+            get { return (bool)GetValue(AllowsTransparencyProperty); }
         }
 
-        public bool ShowTitle {
-            get {
-                return showTitle;
-            }
-            set {
-                showTitle = value;
-                if (title != null) {
-                    title.Visibility = Visibility.Collapsed;
-                }
-            }
+        public static readonly new DependencyProperty WindowStyleProperty = DependencyProperty.Register("WindowStyle", typeof(WindowStyle), typeof(Window), new FrameworkPropertyMetadata(WindowStyle.None));
+        public new WindowStyle WindowStyle {
+            get { return (WindowStyle)GetValue(WindowStyleProperty); }
         }
 
-        public double BottomBannerHeight {
-            get { return bottomBannerHeight; }
-            set {
-                if (value < 0) {
-                    bottomBannerHeight = 0;
-                } else if (bottomBannerHeight > Height - 40) {
-                    bottomBannerHeight = Height - 40;
-                } else {
-                    bottomBannerHeight = value;
-                }
-                if (isInitializationComplete) {
-                    SetBottomBanner(BottomBannerHeight);
-                }
-            }
+        public static readonly DependencyProperty CornerRadiusProperty = DependencyProperty.Register("CornerRadius", typeof(CornerRadius), typeof(Window), new FrameworkPropertyMetadata(new CornerRadius(0)));
+        public CornerRadius CornerRadius {
+            get { return (CornerRadius)GetValue(CornerRadiusProperty); }
+            set { SetValue(CornerRadiusProperty, value); }
         }
 
-        public bool ReserveTitleBar {
-            get { return reserveTitleBar; }
-            set {
-                reserveTitleBar = value;
-                if (contentPresenter != null) {
-                    SetReserveTitleBar(value);
-                }
-            }
-        }
-
+        public static readonly DependencyProperty BaseBackgroundProperty = DependencyProperty.Register("BaseBackground", typeof(Brush), typeof(Window), new FrameworkPropertyMetadata(new SolidColorBrush(Color.FromArgb(1, 0, 0, 0))));
         /// <summary>
-        /// Gets or Sets the base color of the window. When glass effect is enabled, this makes no sense.
+        /// The downmost layer of background, Background is on top of it.
         /// </summary>
-        public Color BaseColor {
-            get { return baseColor; }
-            set {
-                baseColor = value;
-                if (isInitializationComplete) {
-                    SetBackColor(value);
-                }
-            }
+        public Brush BaseBackground {
+            get { return (Brush)GetValue(BaseBackgroundProperty); }
+            set { SetValue(BaseBackgroundProperty, value); }
+        }
+        public static readonly DependencyProperty ContentPresenterBackgroundProperty = DependencyProperty.Register("ContentPresenterBackground", typeof(SolidColorBrush), typeof(Window), new FrameworkPropertyMetadata(new SolidColorBrush(Color.FromArgb(192, 234, 234, 234))));
+        /// <summary>
+        /// The topmost layer of background, Background is on bottom of it.
+        /// With a top margin of the height of the title bar, and with a bottom margin of the bottom banner.
+        /// </summary>
+        public SolidColorBrush ContentPresenterBackground {
+            get { return (SolidColorBrush)GetValue(ContentPresenterBackgroundProperty); }
+            set { SetValue(ContentPresenterBackgroundProperty, value); }
         }
 
-        /// <summary>
-        /// Sets or Gets if the icon is displayed on the top left of the window
-        /// </summary>
+        public static readonly DependencyProperty ShowIconProperty = DependencyProperty.Register("ShowIcon", typeof(bool), typeof(Window), new FrameworkPropertyMetadata(true));
         public bool ShowIcon {
-            get { return showIcon; }
-            set {
-                showIcon = value;
-                if (isInitializationComplete) {
-                    if (!ShowIcon) {
-                        logo.Visibility = Visibility.Collapsed;
-                    } else {
-                        logo.Visibility = Visibility.Visible;
-                    }
-                }
-            }
+            get { return (bool)GetValue(ShowIconProperty); }
+            set { SetValue(ShowIconProperty, value); }
         }
 
-        public bool HideOnClose { get; set; } = false;
+        public static readonly DependencyProperty ShowTitleProperty = DependencyProperty.Register("ShowTitle", typeof(bool), typeof(Window), new FrameworkPropertyMetadata(true));
+        public bool ShowTitle {
+            get { return (bool)GetValue(ShowTitleProperty); }
+            set { SetValue(ShowTitleProperty, value); }
+        }
+
+        public static readonly DependencyProperty BottomBannerHeightProperty = DependencyProperty.Register("BottomBannerHeight", typeof(double), typeof(Window), new FrameworkPropertyMetadata(40.0));
+        public double BottomBannerHeight {
+            get { return (double)GetValue(BottomBannerHeightProperty); }
+            set { SetValue(BottomBannerHeightProperty, value); }
+        }
+
+        public static readonly DependencyProperty EnableBottomBannerProperty = DependencyProperty.Register("EnableBottomBanner", typeof(bool), typeof(Window), new FrameworkPropertyMetadata(true));
+        public bool EnableBottomBanner {
+            get { return (bool)GetValue(EnableBottomBannerProperty); }
+            set { SetValue(EnableBottomBannerProperty, value); }
+        }
+
+        public static readonly DependencyProperty ReserveTitleBarSpaceProperty = DependencyProperty.Register("ReserveTitleBarSpace", typeof(bool), typeof(Window), new FrameworkPropertyMetadata(true));
+        public bool ReserveTitleBarSpace {
+            get { return (bool)GetValue(ReserveTitleBarSpaceProperty); }
+            set { SetValue(ReserveTitleBarSpaceProperty, value); }
+        }
+
+        public static readonly DependencyProperty DraggableProperty = DependencyProperty.Register("Draggable", typeof(bool), typeof(Window), new FrameworkPropertyMetadata(true));
+        public bool Draggable {
+            get { return (bool)GetValue(DraggableProperty); }
+            set { SetValue(DraggableProperty, value); }
+        }
+
+        public static readonly DependencyProperty HideOnCloseProperty = DependencyProperty.Register("HideOnClose", typeof(bool), typeof(Window), new FrameworkPropertyMetadata(false));
+        public bool HideOnClose {
+            get { return (bool)GetValue(HideOnCloseProperty); }
+            set { SetValue(HideOnCloseProperty, value); }
+        }
+
+        public static readonly DependencyProperty EnableGlassEffectProperty = DependencyProperty.Register("EnableGlassEffect", typeof(bool), typeof(Window), new FrameworkPropertyMetadata(true));
+        public bool EnableGlassEffect {
+            get { return (bool)GetValue(EnableGlassEffectProperty); }
+            set { SetValue(EnableGlassEffectProperty, value); }
+        }
         #endregion
 
         public enum ControlBoxStyles {
@@ -136,99 +128,111 @@ namespace Channy.Controls2.Controls {
             WindowHelper.GlobalActivate(this);
         }
 
-        private bool IsGlassEffectEnabled {
-            get {
-                return GetGlassEffectEnabled();
-            }
-        }
+        public static bool IsGlassEffectAvailable => GetDwmAvailable();
 
         private void RegisterEvents() {
             SizeChanged += new SizeChangedEventHandler(WindowEx_SizeChanged);
             Loaded += new RoutedEventHandler(WindowEx_Loaded);
+            MouseLeftButtonDown += new MouseButtonEventHandler(WindowEx_MouseLeftButtonDown);
         }
 
         private void UnregisterEvents() {
-            SizeChanged -= new SizeChangedEventHandler(WindowEx_SizeChanged);
-            Loaded -= new RoutedEventHandler(WindowEx_Loaded);
+            SizeChanged -= WindowEx_SizeChanged;
+            Loaded -= WindowEx_Loaded;
+            MouseLeftButtonDown -= WindowEx_MouseLeftButtonDown;
         }
 
-        private int radius = 5;
-        private bool isInitializationComplete = false;
-        private bool showIcon = true;
+        public static T FindVisualChild<T>(DependencyObject parent, string childName = "")
+            where T : DependencyObject {
+            // Confirm parent and childName are valid. 
+            if (parent == null) {
+                return null;
+            }
 
-        private byte alphaCache = 255;
+            T foundChild = null;
 
-        private ControlBoxStyles controlBoxStyle = ControlBoxStyles.MinMaxClose;
+            int childrenCount = VisualTreeHelper.GetChildrenCount(parent);
+            for (int i = 0; i < childrenCount; i++) {
+                var child = VisualTreeHelper.GetChild(parent, i);
+                // If the child is not of the request child type child
+                T childType = child as T;
+                if (childType == null) {
+                    // recursively drill down the tree
+                    foundChild = FindVisualChild<T>(child, childName);
+
+                    // If the child is found, break so we do not overwrite the found child. 
+                    if (foundChild != null) break;
+                } else if (!string.IsNullOrEmpty(childName)) {
+                    // If the child's name is set for search
+                    if (child is FrameworkElement frameworkElement && frameworkElement.Name == childName) {
+                        // if the child's name is of the request name
+                        foundChild = (T)child;
+                        break;
+                    }
+                } else {
+                    // child element found.
+                    foundChild = (T)child;
+                    break;
+                }
+            }
+
+            return foundChild;
+        }
+
+        public static T FindVisualParent<T>(DependencyObject child) where T : DependencyObject {
+            // get parent item
+            DependencyObject parentObject = VisualTreeHelper.GetParent(child);
+
+            // we’ve reached the end of the tree
+            if (parentObject == null) return null;
+
+            // check if the parent matches the type we’re looking for
+            if (parentObject is T parent) {
+                return parent;
+            } else {
+                // use recursion to proceed with next level
+                return FindVisualParent<T>(parentObject);
+            }
+        }
 
         private System.Windows.Controls.Button close = null;
         private System.Windows.Controls.Button min = null;
         private System.Windows.Controls.Button max = null;
         private Grid controlBox = null;
-        private Line minMaxLine = null;
-        private Line maxCloseLine = null;
-        private Grid bottomBanner = null;
-        private Border controlGridBorder = null;
-        private Border border = null;
-        private Image logo = null;
-        private TextBlock title = null;
-        private Border titleBar = null;
-        private ContentPresenter contentPresenter = null;
-
-        private bool reserveTitleBar = true;
-        private bool showTitle = true;
-
-        private double bottomBannerHeight = 35.0;
-
-        private Color controlGridBackColor = Color.FromArgb(128, 255, 255, 255);
-        private Color baseColor = Color.FromArgb(255, 234, 234, 234);
+        private Border titleBarHitTester = null;
+        private Grid body = null;
 
         private IntPtr blurRegionHandle = IntPtr.Zero;
         private const int HitTestCornerThreshold = 8;
         private const int HitTestBorderThreshold = 4;
-        //private const int TitleHeight = 36;
-        //private int ControlBoxWidth = 93;
         private WinApi.RECT clientRect = new WinApi.RECT();
-
+        
         protected override void OnClosed(EventArgs e) {
             if (blurRegionHandle != IntPtr.Zero) {
                 WinApi.DeleteObject(blurRegionHandle);
             }
             UnregisterEvents();
-            MouseLeftButtonDown -= new MouseButtonEventHandler(WindowEx_MouseLeftButtonDown);
             if (min != null) {
-                min.Click -= new RoutedEventHandler(min_Click);
+                min.Click -= Min_Click;
                 min = null;
             }
             if (max != null) {
-                max.Click -= new RoutedEventHandler(max_Click);
+                max.Click -= Max_Click;
                 max = null;
             }
             if (close != null) {
-                close.Click -= new RoutedEventHandler(close_Click);
+                close.Click -= Close_Click;
                 close = null;
             }
             controlBox = null;
-            minMaxLine = null;
-            maxCloseLine = null;
-            //brush = null;
-            bottomBanner = null;
-            controlGridBorder = null;
-            border = null;
-            logo = null;
             base.OnClosed(e);
         }
 
         protected virtual IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled) {
             switch (msg) {
                 case (int)WinApi.Messages.WM_DWMCOMPOSITIONCHANGED:
-                    if (IsGlassEffectEnabled) {
-                        alphaCache = BaseColor.A;
-                        baseColor.A = 1;
-                        BaseColor = baseColor;
+                    if (IsGlassEffectAvailable && EnableGlassEffect) {
                         EnableBlur();
-                    } else {
-                        baseColor.A = alphaCache;
-                        BaseColor = baseColor;
                     }
                     break;
                 case (int)WinApi.Messages.WM_GETMINMAXINFO:
@@ -277,10 +281,14 @@ namespace Channy.Controls2.Controls {
                         if (Draggable && IsInTitleArea(x, y)) {
                             handled = true;
                             return new IntPtr((int)WinApi.HitTest.HTCAPTION);
-                        } else {
-                            break;
                         }
+                        break;
                     }
+                case (int)WinApi.Messages.WM_NCLBUTTONDBLCLK:
+                    if (!Draggable || ControlBoxStyle != ControlBoxStyles.MinMaxClose) {
+                        handled = true;
+                    }
+                    break;
                 case (int)WinApi.Messages.WM_SIZING:
                     int edge = wParam.ToInt32();
                     WinApi.RECT rect = new WinApi.RECT();
@@ -333,36 +341,21 @@ namespace Channy.Controls2.Controls {
             return IntPtr.Zero;
         }
 
-        private static bool GetGlassEffectEnabled() {
-            Version ver = Environment.OSVersion.Version;
-            if (ver.Major < 6) {
+        private static bool GetDwmAvailable() {
+            try {
+                WinApi.DwmIsCompositionEnabled(out bool enabled);
+                return enabled;
+            } catch {
                 return false;
-            } else if (ver.Major == 6) {
-                if (ver.Minor == 0 || ver.Minor == 1) { // Vista or Win 7
-                    WinApi.DwmIsCompositionEnabled(out bool enabled);
-                    return enabled;
-                }
-
-                /* 
-                 * If the invoker is not manifested
-                 * See https://msdn.microsoft.com/en-us/library/windows/desktop/ms724833(v=vs.85).aspx
-                 */
-                if (WindowHelper.IsWindows10()) {
-                    return true;
-                }
-            } else if (ver.Major == 10) {
-                return true;
             }
-            return false;
         }
 
         private bool IsInTitleArea(int x, int y) {
-            //var pos = PointFromScreen(new Point(x, y));
             var point = new Point(x, y);
-            var posTitle = TranslatePoint(point, titleBar);
+            var posTitle = TranslatePoint(point, titleBarHitTester);
             var posControlBox = TranslatePoint(point, controlBox);
 
-            if (posTitle.X < 0 || posTitle.X > titleBar.ActualWidth || posTitle.Y < 0 || posTitle.Y > titleBar.ActualHeight) {
+            if (posTitle.X < 0 || posTitle.X > titleBarHitTester.ActualWidth || posTitle.Y < 0 || posTitle.Y > titleBarHitTester.ActualHeight) {
                 return false;
             }
 
@@ -370,45 +363,56 @@ namespace Channy.Controls2.Controls {
                 return false;
             }
 
-            //if (y <= TitleHeight && x <= ActualWidth - ControlBoxWidth) {
-            //    return true;
-            //}
+            if (ReserveTitleBarSpace) {
+                return true;
+            }
+
+            var posBody = TranslatePoint(point, body);
+            if (posBody.X > 0 && posBody.X <= body.ActualWidth && posBody.Y > 0 && posBody.Y <= body.ActualHeight) {
+                var result = VisualTreeHelper.HitTest(body, posBody);
+                if (result == null) {
+                    return false;
+                }
+
+                if (result.VisualHit == null) {
+                    return true;
+                }
+
+                //if (!(result.VisualHit is Control)) {
+                //    return true;
+                //}
+                
+                if (FindVisualParent<ContentPresenter>(result.VisualHit) == null) {
+                    return true;
+                }
+
+                return false;
+            }
 
             return true;
         }
 
         private void WindowEx_SizeChanged(object sender, SizeChangedEventArgs e) {
             WinApi.GetClientRect(new WindowInteropHelper(this).Handle, out clientRect);
-            if (IsLoaded && IsGlassEffectEnabled) {
+            if (IsLoaded && IsGlassEffectAvailable && EnableGlassEffect) {
                 EnableBlur();
             }
         }
 
         private void WindowEx_Loaded(object sender, RoutedEventArgs e) {
             InitializeControlObjects();
-
-            if (IsGlassEffectEnabled) {
-                alphaCache = BaseColor.A;
-                baseColor.A = 1;
-                BaseColor = baseColor;
+            if (IsGlassEffectAvailable && EnableGlassEffect) {
                 EnableBlur();
-            } else {
-                baseColor.A = alphaCache;
-                BaseColor = baseColor;
             }
-
             BringToFront();
         }
 
         private void EnableBlur() {
-            Version ver = Environment.OSVersion.Version;
-            if (ver.Major < 6) {
-                return;
-            } else if (ver.Major == 10 || WindowHelper.IsWindows10()) { // Win 10
+            IntPtr handle = new WindowInteropHelper(this).Handle;
+            if (WinApi.IsWindows10OrGreater) {
                 WinApi.AccentPolicy accentPolicy = new WinApi.AccentPolicy() {
-                    AccentState = WinApi.AccentState.ACCENT_ENABLE_BLURBEHIND,
+                    AccentState = WinApi.AccentState.ACCENT_ENABLE_BLURBEHIND | WinApi.AccentState.ACCENT_ENABLE_GRADIENT | WinApi.AccentState.ACCENT_TRANSPARENTGRADIENT,
                 };
-
                 int size = Marshal.SizeOf(accentPolicy);
                 IntPtr accentPtr = Marshal.AllocHGlobal(size);
                 Marshal.StructureToPtr(accentPolicy, accentPtr, false);
@@ -417,27 +421,23 @@ namespace Channy.Controls2.Controls {
                     SizeOfData = size,
                     Attribute = WinApi.WindowCompositionAttribute.WCA_ACCENT_POLICY
                 };
-                IntPtr handle = new WindowInteropHelper(this).Handle;
                 WinApi.SetWindowCompositionAttribute(handle, ref data);
                 Marshal.FreeHGlobal(accentPtr);
-            } else if (ver.Major == 6) {
-                if (ver.Minor == 0 || ver.Minor == 1) { // Vista or Win 7
-                    if (blurRegionHandle != IntPtr.Zero) {
-                        WinApi.DeleteObject(blurRegionHandle);
-                    }
-                    Point pos = border.TranslatePoint(new Point(0, 0), this);
-                    int left = (int)pos.X;
-                    int top = (int)pos.Y;
-                    double w = border.Width;
-                    blurRegionHandle = WinApi.CreateRectRgn(left, top, clientRect.Width - left * 2, clientRect.Height - left * 2);
+            } else if (WinApi.IsWindowsVistaOrGreater) {
+                Point pos = TranslatePoint(new Point(0, 0), this);
+                int left = (int)pos.X;
+                int top = (int)pos.Y;
+                double w = Width;
+                blurRegionHandle = WinApi.CreateRectRgn(left, top, clientRect.Width - left * 2, clientRect.Height - left * 2);
 
-                    WinApi.DWM_BLURBEHIND blur = new WinApi.DWM_BLURBEHIND() {
-                        fEnable = true,
-                        dwFlags = WinApi.DWM_BLURBEHIND.DWM_BB_ENABLE | WinApi.DWM_BLURBEHIND.DWM_BB_BLURREGION,
-                        hRegionBlur = blurRegionHandle
-                    };
-                    IntPtr handle = new WindowInteropHelper(this).Handle;
-                    WinApi.DwmEnableBlurBehindWindow(handle, blur);
+                WinApi.DWM_BLURBEHIND blur = new WinApi.DWM_BLURBEHIND() {
+                    fEnable = true,
+                    dwFlags = WinApi.DWM_BLURBEHIND.DWM_BB_ENABLE | WinApi.DWM_BLURBEHIND.DWM_BB_BLURREGION,
+                    hRegionBlur = blurRegionHandle
+                };
+                WinApi.DwmEnableBlurBehindWindow(handle, blur);
+                if (blurRegionHandle != IntPtr.Zero) {
+                    WinApi.DeleteObject(blurRegionHandle);
                 }
             }
         }
@@ -448,32 +448,11 @@ namespace Channy.Controls2.Controls {
                 source.AddHook(new HwndSourceHook(WndProc));
             }
 
-            MouseLeftButtonDown += new MouseButtonEventHandler(WindowEx_MouseLeftButtonDown);
-            border = (Border)Template.FindName("WindowExBorder", this);
-            if (border != null) {
-                SetBackColor(BaseColor);
-            } else {
-                throw new Exception("Cannot initialize object 'WindowExBorder'");
-            }
-
-            logo = (Image)Template.FindName("Logo", this);
-            if (logo != null) {
-                if (!ShowIcon) {
-                    logo.Visibility = Visibility.Collapsed;
-                }
-            } else {
-                throw new Exception("Cannot initialize object 'Logo'");
-            }
-
-            controlGridBorder = (Border)Template.FindName("ControlGridBorder", this);
-            if (controlGridBorder == null) {
-                throw new Exception("Cannot initialize object 'ControlGridBorder'");
-            }
-            SetControlGridBackColor(ControlGridBackColor);
-
-            titleBar = (Border)Template.FindName("PART_TitleBar", this);
-            if (titleBar == null) {
-                throw new Exception("Cannot initialize object 'PART_TitleBar'");
+            body = (Grid)Template.FindName("PART_Body", this);
+            
+            titleBarHitTester = (Border)Template.FindName("PART_TitleBarHitTester", this);
+            if (titleBarHitTester == null) {
+                throw new Exception("Cannot initialize object 'PART_TitleBarHitTester'");
             }
 
             controlBox = (Grid)Template.FindName("PART_ControlBox", this);
@@ -481,137 +460,33 @@ namespace Channy.Controls2.Controls {
                 throw new Exception("Cannot initialize object 'PART_ControlBox'");
             }
 
-            bottomBanner = (Grid)Template.FindName("BottomBanner", this);
-            if (bottomBanner != null) {
-                SetBottomBanner(BottomBannerHeight);
-            } else {
-                throw new Exception("Cannot initialize object 'BottomBanner'");
-            }
-
-            contentPresenter = (ContentPresenter)Template.FindName("ContentPresenter", this);
-            if (contentPresenter == null) {
-                throw new Exception("Cannot initialize object 'ContentPresenter'");
-            } else {
-                SetReserveTitleBar(ReserveTitleBar);
-            }
-
-            close = (System.Windows.Controls.Button)Template.FindName("CloseButton", this);
+            close = (System.Windows.Controls.Button)Template.FindName("PART_CloseButton", this);
             if (close != null) {
-                close.Click += new RoutedEventHandler(close_Click);
+                close.Click += new RoutedEventHandler(Close_Click);
             } else {
-                throw new Exception("Cannot initialize object 'CloseBox'");
+                throw new Exception("Cannot initialize object 'PART_CloseBox'");
             }
 
-            maxCloseLine = (Line)Template.FindName("Line2", this);
-            if (maxCloseLine == null) {
-                throw new Exception("Cannot initialize object 'MaxCloseSeparator'");
-            }
-
-            max = (System.Windows.Controls.Button)Template.FindName("MaxButton", this);
+            max = (System.Windows.Controls.Button)Template.FindName("PART_MaxButton", this);
             if (max != null) {
-                max.Click += new RoutedEventHandler(max_Click);
+                max.Click += new RoutedEventHandler(Max_Click);
             } else {
-                throw new Exception("Cannot initialize object 'MaxBox'");
+                throw new Exception("Cannot initialize object 'PART_MaxBox'");
             }
 
-            minMaxLine = (Line)Template.FindName("Line1", this);
-            if (minMaxLine == null) {
-                throw new Exception("Cannot initialize object 'MinMaxSeparator'");
-            }
-
-            min = (System.Windows.Controls.Button)Template.FindName("MinButton", this);
+            min = (System.Windows.Controls.Button)Template.FindName("PART_MinButton", this);
             if (min != null) {
-                min.Click += new RoutedEventHandler(min_Click);
+                min.Click += new RoutedEventHandler(Min_Click);
             } else {
-                throw new Exception("Cannot initialize object 'MinBox'");
-            }
-            SetControlBoxStyle(ControlBoxStyle);
-
-            title = (TextBlock)Template.FindName("Title", this);
-            if (title == null) {
-                throw new Exception("Cannot initialize object 'Title'");
-            } else {
-                if (!showTitle) {
-                    title.Visibility = Visibility.Collapsed;
-                }
-            }
-
-            isInitializationComplete = true;
-        }
-
-        private void SetBackColor(Color color) {
-            border.Background = new SolidColorBrush(color);
-            Brush brush = new SolidColorBrush();
-        }
-
-        private void SetBottomBanner(double height) {
-            bottomBanner.Height = height;
-            if (height == 0) {
-                controlGridBorder.CornerRadius = new CornerRadius(0, 0, Radius, Radius);
-            } else {
-                controlGridBorder.CornerRadius = new CornerRadius(0);
+                throw new Exception("Cannot initialize object 'PART_MinBox'");
             }
         }
 
-        private void SetReserveTitleBar(bool reserve) {
-            if (reserve) {
-                contentPresenter.SetValue(Grid.RowProperty, 1);
-                contentPresenter.SetValue(Grid.RowSpanProperty, 2);
-                controlGridBorder.SetValue(Grid.RowProperty, 1);
-                controlGridBorder.SetValue(Grid.RowSpanProperty, 1);
-            } else {
-                contentPresenter.SetValue(Grid.RowProperty, 0);
-                contentPresenter.SetValue(Grid.RowSpanProperty, 3);
-                controlGridBorder.SetValue(Grid.RowProperty, 0);
-                controlGridBorder.SetValue(Grid.RowSpanProperty, 2);
-            }
-        }
-
-        private void SetControlGridBackColor(Color color) {
-            double offset = 5 / Height;
-            LinearGradientBrush brush = new LinearGradientBrush();
-            brush.StartPoint = new Point(0, 0);
-            brush.EndPoint = new Point(0, 1);
-            brush.GradientStops.Add(new GradientStop(Color.FromArgb(0, color.R, color.G, color.B), 0.0));
-            brush.GradientStops.Add(new GradientStop(color, offset));
-            brush.GradientStops.Add(new GradientStop(color, 1 - offset));
-            brush.GradientStops.Add(new GradientStop(Color.FromArgb(0, color.R, color.G, color.B), 1));
-
-            controlGridBorder.Background = brush;
-        }
-
-        private void SetControlBoxStyle(ControlBoxStyles style) {
-            if (style == ControlBoxStyles.None) {
-                controlBox.Visibility = Visibility.Hidden;
-            } else if (style == ControlBoxStyles.Close) {
-                controlBox.Visibility = Visibility.Visible;
-                min.Visibility = Visibility.Hidden;
-                minMaxLine.Visibility = Visibility.Hidden;
-                max.Visibility = Visibility.Hidden;
-                maxCloseLine.Visibility = Visibility.Hidden;
-                close.Visibility = Visibility.Visible;
-            } else if (style == ControlBoxStyles.MinClose) {
-                controlBox.Visibility = Visibility.Visible;
-                min.Visibility = Visibility.Visible;
-                minMaxLine.Visibility = Visibility.Visible;
-                max.Visibility = Visibility.Collapsed;
-                maxCloseLine.Visibility = Visibility.Collapsed;
-                close.Visibility = Visibility.Visible;
-            } else if (style == ControlBoxStyles.MinMaxClose) {
-                controlBox.Visibility = Visibility.Visible;
-                min.Visibility = Visibility.Visible;
-                minMaxLine.Visibility = Visibility.Visible;
-                max.Visibility = Visibility.Visible;
-                maxCloseLine.Visibility = Visibility.Visible;
-                close.Visibility = Visibility.Visible;
-            }
-        }
-
-        void min_Click(object sender, RoutedEventArgs e) {
+        private void Min_Click(object sender, RoutedEventArgs e) {
             WindowState = WindowState.Minimized;
         }
 
-        void max_Click(object sender, RoutedEventArgs e) {
+        private void Max_Click(object sender, RoutedEventArgs e) {
             if (WindowState == WindowState.Maximized) {
                 WindowState = WindowState.Normal;
             } else {
@@ -619,7 +494,7 @@ namespace Channy.Controls2.Controls {
             }
         }
 
-        void close_Click(object sender, RoutedEventArgs e) {
+        private void Close_Click(object sender, RoutedEventArgs e) {
             if (HideOnClose) {
                 Hide();
             } else {
@@ -627,7 +502,7 @@ namespace Channy.Controls2.Controls {
             }
         }
 
-        void WindowEx_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
+        private void WindowEx_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
             if (Draggable && e.ButtonState == MouseButtonState.Pressed) {
                 DragMove();
             }

@@ -298,6 +298,101 @@ namespace Channy.Controls2 {
         [DllImport("user32.dll")]
         public static extern int SetWindowCompositionAttribute(IntPtr hwnd, ref WindowCompositionAttributeData data);
 
+        [DllImport("kernel32.dll")]
+        static extern ulong VerSetConditionMask(ulong dwlConditionMask, uint dwTypeBitMask, byte dwConditionMask);
+
+        [DllImport("kernel32.dll")]
+        static extern bool VerifyVersionInfo([In] ref OsVersionInfoEx lpVersionInfo, uint dwTypeMask, ulong dwlConditionMask);
+
+        [StructLayout(LayoutKind.Sequential)]
+        struct OsVersionInfoEx {
+            public uint OSVersionInfoSize;
+            public uint MajorVersion;
+            public uint MinorVersion;
+            public uint BuildNumber;
+            public uint PlatformId;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 128)]
+            public string CSDVersion;
+            public ushort ServicePackMajor;
+            public ushort ServicePackMinor;
+            public ushort SuiteMask;
+            public byte ProductType;
+            public byte Reserved;
+        }
+
+        /// <summary>
+        /// Add manifest file to your application and uncomment the following to make it work for Windows 8 and later.
+        /// <!-- Windows Vista -->
+        /// <supportedOS Id = "{e2011457-1546-43c5-a5fe-008deee3d3f0}" />
+        /// <!--Windows 7 -->
+        /// <supportedOS Id = "{35138b9a-5d96-4fbd-8e2d-a2440225f93a}" />
+        ///
+        /// <!--Windows 8 -->
+        /// <supportedOS Id = "{4a2f28e3-53b9-4441-ba9c-d69d4a4a6e38}" />
+        ///
+        /// <!--Windows 8.1 -->
+        /// <supportedOS Id = "{1f676c76-80e1-4239-95bb-83d0f6d0da78}" />
+        ///
+        /// <!--Windows 10 -->
+        /// <supportedOS Id = "{8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a}" />
+        /// </summary>
+        /// <param name="majorVersion"></param>
+        /// <param name="minorVersion"></param>
+        /// <param name="servicePackMajor"></param>
+        /// <returns></returns>
+        public static bool IsWindowsVersionOrGreater(uint majorVersion, uint minorVersion, ushort servicePackMajor) {
+            OsVersionInfoEx osvi = new OsVersionInfoEx();
+            osvi.OSVersionInfoSize = (uint)Marshal.SizeOf(osvi);
+            osvi.MajorVersion = majorVersion;
+            osvi.MinorVersion = minorVersion;
+            osvi.ServicePackMajor = servicePackMajor;
+            // These constants initialized with corresponding definitions in
+            // winnt.h (part of Windows SDK)
+            const uint VER_MINORVERSION = 0x0000001;
+            const uint VER_MAJORVERSION = 0x0000002;
+            const uint VER_SERVICEPACKMAJOR = 0x0000020;
+            const byte VER_GREATER_EQUAL = 3;
+            ulong versionOrGreaterMask = VerSetConditionMask(VerSetConditionMask(VerSetConditionMask(0, VER_MAJORVERSION, VER_GREATER_EQUAL), VER_MINORVERSION, VER_GREATER_EQUAL), VER_SERVICEPACKMAJOR, VER_GREATER_EQUAL);
+            uint versionOrGreaterTypeMask = VER_MAJORVERSION | VER_MINORVERSION | VER_SERVICEPACKMAJOR;
+            return VerifyVersionInfo(ref osvi, versionOrGreaterTypeMask, versionOrGreaterMask);
+        }
+
+        /// <summary>
+        /// Add manifest file to your application and uncomment the following to make it work for Windows 8 and later.
+        /// <!-- Windows Vista -->
+        /// <supportedOS Id = "{e2011457-1546-43c5-a5fe-008deee3d3f0}" />
+        /// <!--Windows 7 -->
+        /// <supportedOS Id = "{35138b9a-5d96-4fbd-8e2d-a2440225f93a}" />
+        ///
+        /// <!--Windows 8 -->
+        /// <supportedOS Id = "{4a2f28e3-53b9-4441-ba9c-d69d4a4a6e38}" />
+        ///
+        /// <!--Windows 8.1 -->
+        /// <supportedOS Id = "{1f676c76-80e1-4239-95bb-83d0f6d0da78}" />
+        ///
+        /// <!--Windows 10 -->
+        /// <supportedOS Id = "{8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a}" />
+        /// </summary>
+        public static bool IsWindowsVistaOrGreater => IsWindowsVersionOrGreater(6, 0, 0);
+
+        /// <summary>
+        /// Add manifest file to your application and uncomment the following to make it work for Windows 8 and later.
+        /// <!-- Windows Vista -->
+        /// <supportedOS Id = "{e2011457-1546-43c5-a5fe-008deee3d3f0}" />
+        /// <!--Windows 7 -->
+        /// <supportedOS Id = "{35138b9a-5d96-4fbd-8e2d-a2440225f93a}" />
+        ///
+        /// <!--Windows 8 -->
+        /// <supportedOS Id = "{4a2f28e3-53b9-4441-ba9c-d69d4a4a6e38}" />
+        ///
+        /// <!--Windows 8.1 -->
+        /// <supportedOS Id = "{1f676c76-80e1-4239-95bb-83d0f6d0da78}" />
+        ///
+        /// <!--Windows 10 -->
+        /// <supportedOS Id = "{8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a}" />
+        /// </summary>
+        public static bool IsWindows10OrGreater => IsWindowsVersionOrGreater(10, 0, 0);
+
         [StructLayout(LayoutKind.Sequential)]
         public struct WindowCompositionAttributeData {
             public WindowCompositionAttribute Attribute;
